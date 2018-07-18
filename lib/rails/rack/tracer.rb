@@ -5,10 +5,6 @@ module Rails
         def instrument(tracer: OpenTracing.global_tracer, middlewares: Rails.configuration.middleware)
           return unless defined?(::Rack::Tracer)
           @owns_all_middlewares = false
-          unless middlewares.include?(::Rack::Tracer)
-            middlewares.use(::Rack::Tracer, tracer: tracer)
-            @owns_all_middlewares = true
-          end
           middlewares.insert_after(::Rack::Tracer, Rails::Rack::Tracer)
         end
 
